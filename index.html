@@ -2,44 +2,122 @@
 <html>
   <head>
     <title>GitHub Account Stats</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        /* Add some general styles for the page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Add custom styles for night mode */
+        .night-mode {
+            background-color: #1c1c1c;
+            color: white;
+        }
+
+        .night-mode input[type="text"] {
+            border-color: white;
+            color: white;
+        }
+
+        .night-mode .card {
+            background-color: #2c2c2c;
+            color: white;
+        }
+
+        /* Style the output div */
+        #output {
+            padding: 10px;
+            background-color: #f2f2f2;
+            margin: 10px;
+        }
+
+        /* Style the output text */
+        #output p {
+            margin: 0;
+            padding: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+   
+        /* Style the toggle button */
+        .night-mode-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
   </head>
   <body>
-    <form>
-      <label for="username">GitHub Username:</label>
-      <input type="text" id="username" name="username">
-      <button type="button" onclick="getGitHubAccountStats()">Get Stats</button>
-    </form>
-    <div id="output"></div>
+    <button class="night-mode-toggle" onclick="toggleNightMode()">Toggle Night Mode</button>
+    <div class="container my-5">
+      <form>
+        <div class="form-group">
+          <label for="username">GitHub Username:</label>
+          <input type="text" class="form-control" id="username" name="username">
+        </div>
+        <button type="button" class="btn btn-primary" onclick="getGitHubAccountStats()">Get Stats</button>
+      </form>
+      <div id="output"></div>
+    </div>
     <script>
-      function getGitHubAccountStats() {
-        const Http = new XMLHttpRequest();
-        const username = document.getElementById("username").value;
-        const url='https://api.github.com/users/'+username;
-        Http.open("GET", url);
-        Http.send();
-        Http.onreadystatechange = (e) => {
-            if (Http.readyState === 4 && Http.status === 200) {
-                let response = JSON.parse(Http.responseText)
-                let output = `
-                <p>Name: ${response.name}</p>
-                <p>Username: ${response.login}</p>
-                <p>Company: ${response.company}</p>
-                <p>Location: ${response.location}</p>
-                <p>Email: ${response.email}</p>
-                <p>Bio: ${response.bio}</p>
-                <p>Public Repos: ${response.public_repos}</p>
-                <p>Public Gists: ${response.public_gists}</p>
-                <p>Followers: ${response.followers}</p>
-                <p>Following: ${response.following}</p>
-                <p>Created at: ${response.created_at}</p>
-                <p>Updated at: ${response.updated_at}</p>
-                <p>Website: ${response.blog}</p>
-                <p>Hireable: ${response.hireable}</p>
+        let nightMode = false;
+
+        function toggleNightMode() {
+            nightMode = !nightMode;
+            if (nightMode) {
+                document.body.classList.add("night-mode");
+                document.querySelector(".night-mode-toggle").innerHTML = "Toggle Day Mode";
+            } else {
+                document.body.classList.remove("night-mode");
+                document.querySelector(".night-mode-toggle").innerHTML = "Toggle Night Mode";
+            }
+        }
+
+        function getGitHubAccountStats() {
+            const Http = new XMLHttpRequest();
+            const username = document.getElementById("username").value;
+            const url='https://api.github.com/users/'+username;
+            Http.open("GET", url);
+            Http.send();
+            Http.onreadystatechange = (e) => {
+                if (Http.readyState === 4 && Http.status === 200) {
+                    let response = JSON.parse(Http.responseText)
+                    let output = `
+                    <div class="card">
+                      <div class="card-header">
+                        <h3>${response.name}</h3>
+                      </div>
+                      <div class="card-body">
+                        <p>Username: ${response.login}</p>
+                        <p>Company: ${response.company}</p>
+                        <p>Location: ${response.location}</p>
+                        <p>Email: ${response.email}</p>
+                        <p>Bio: ${response.bio}</p>
+                        <p>Public Repos: ${response.public_repos}</p>
+                        <p>Public Gists: ${response.public_gists}</p>
+                        <p>Followers: ${response.followers}</p>
+                        <p>Following: ${response.following}</p>
+                        <p>Created at: ${response.created_at}</p>
+                        <p>Updated at: ${response.updated_at}</p>
+                        <p>Website: ${response.blog}</p>
+                        <p>Hireable: ${response.hireable}</p>
+                    </div>
+                </div>
                 `
                 document.getElementById("output").innerHTML = output;
             }
         }
-      }
-    </script>
+    }
+</script>
+
   </body>
 </html>
