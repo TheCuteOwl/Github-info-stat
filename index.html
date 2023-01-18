@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GitHub Account Stats</title>
+  </head>
+  <body>
+    <form>
+      <label for="username">GitHub Username:</label>
+      <input type="text" id="username" name="username">
+      <button type="button" onclick="getGitHubAccountStats()">Get Stats</button>
+    </form>
+    <div id="output"></div>
+    <script>
+      function getGitHubAccountStats() {
+        const Http = new XMLHttpRequest();
+        const username = document.getElementById("username").value;
+        const url='https://api.github.com/users/'+username;
+        Http.open("GET", url);
+        Http.send();
+        Http.onreadystatechange = (e) => {
+            if (Http.readyState === 4 && Http.status === 200) {
+                let response = JSON.parse(Http.responseText)
+                let output = `
+                <p>Name: ${response.name}</p>
+                <p>Username: ${response.login}</p>
+                <p>Company: ${response.company}</p>
+                <p>Location: ${response.location}</p>
+                <p>Email: ${response.email}</p>
+                <p>Bio: ${response.bio}</p>
+                <p>Public Repos: ${response.public_repos}</p>
+                <p>Public Gists: ${response.public_gists}</p>
+                <p>Followers: ${response.followers}</p>
+                <p>Following: ${response.following}</p>
+                <p>Created at: ${response.created_at}</p>
+                <p>Updated at: ${response.updated_at}</p>
+                <p>Website: ${response.blog}</p>
+                <p>Hireable: ${response.hireable}</p>
+                `
+                document.getElementById("output").innerHTML = output;
+            }
+        }
+      }
+    </script>
+  </body>
+</html>
